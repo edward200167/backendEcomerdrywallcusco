@@ -23,6 +23,7 @@ const createRoutes = () => {
       'usoproducto': '/usos',
       'volumendescuento': '/descuentos',
       'etiquetaproducto': '/etiquetas',
+      'ofertaproducto': '/ofertas',
       'user': '/users',
       'conjuntocarritoproducto': '/carrito',
       'carritoproducto': '/carrito-items'

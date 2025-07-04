@@ -16,6 +16,9 @@ const createController = (modelName, options = {}) => {
       { association: 'descuentos', attributes: ['id', 'cantidadMin', 'porcentaje'], through: { attributes: [] } },
       { association: 'ofertas', attributes: ['id', 'nombre', 'tipoDescuento', 'valorDescuento', 'fechaInicio', 'fechaFin', 'estado'], through: { attributes: [] } }
     ],
+    OfertaProducto: [
+      { association: 'productos', attributes: ['id', 'nombre', 'precio', 'precioLiquidacion', 'stock'], through: { attributes: [] } }
+    ],
     ConjuntoCarritoProducto: [
       { association: 'user', attributes: ['id', 'nombre', 'correoElectronico', 'telefono'] },
       { 
