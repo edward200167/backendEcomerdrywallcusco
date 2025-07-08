@@ -13,6 +13,7 @@ const userSeeder = async () => {
         telefono: '987654321',
         rol: 'cliente',
         codigoReferido: 'REF789012',
+        codigoQueLoReferio: null, // No fue referido por nadie
         puntos: 2340,
         aceptoTerminos: true
       },
@@ -22,8 +23,9 @@ const userSeeder = async () => {
         correoElectronico: 'constructora.cusco@email.com',
         contraseña: await bcrypt.hash('demo123', 10),
         telefono: '984123456',
-        rol: 'empresa',
+        rol: 'empresarial',
         codigoReferido: 'REF123456',
+        codigoQueLoReferio: 'REF789012', // Referido por Juan Pérez
         puntos: 15420,
         ruc: '20123456789',
         nombreEmpresa: 'Constructora Cusco SAC',
@@ -38,6 +40,7 @@ const userSeeder = async () => {
         telefono: '999888777',
         rol: 'admin',
         codigoReferido: 'ADMIN001',
+        codigoQueLoReferio: null, // Admin no fue referido
         puntos: 4000,
         aceptoTerminos: true
       }

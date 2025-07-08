@@ -1,7 +1,8 @@
 const catchError = require('../utils/catchError');
 
 const createController = (modelName, options = {}) => {
-  const Model = require(`../models/${modelName}`);
+  try {
+    const Model = require(`../models/${modelName}`);
   
   // Configuración de includes por modelo
   const includeConfigs = {
@@ -21,6 +22,8 @@ const createController = (modelName, options = {}) => {
     ],
     ConjuntoCarritoProducto: [
       { association: 'user', attributes: ['id', 'nombre', 'correoElectronico', 'telefono'] },
+      { association: 'tipoEnvio', attributes: ['id', 'nombre', 'precio', 'descripcion'] },
+      { association: 'metodoPago', attributes: ['id', 'nombre', 'descripcion', 'urlImagen', 'numeroReferencia'] },
       { 
         association: 'items', 
         attributes: ['id', 'cantidadProductosSoles', 'cantidadProductosPuntos', 'totalSoles', 'totalPuntos'],
@@ -58,7 +61,23 @@ const createController = (modelName, options = {}) => {
             ]
           }
         ]
+      },
+      { 
+        association: 'cupones',
+        attributes: ['id', 'codigo', 'tipo_descuento', 'valor', 'fecha_inicio', 'fecha_fin', 'max_uso', 'usado', 'activo'],
+        through: { 
+          attributes: ['fechaUso', 'montoDescuento'] 
+        }
       }
+    ],
+    ConfigRolRequisito: [
+      { association: 'producto', attributes: ['id', 'nombre', 'precio'] }
+    ],
+    Config_premios_ruleta: [
+      { association: 'producto', attributes: ['id', 'nombre', 'precio'] }
+    ],
+    CodigoReferido: [
+      { association: 'usuario', attributes: ['id', 'nombre', 'correoElectronico'] }
     ]
   };
 
@@ -168,6 +187,10 @@ const createController = (modelName, options = {}) => {
   });
 
   return { getAll, create, getOne, update, remove };
+  } catch (error) {
+    console.error(`Error loading model ${modelName}:`, error.message);
+    return null;
+  }
 };
 
 module.exports = createController;

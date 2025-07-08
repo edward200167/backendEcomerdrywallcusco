@@ -12,6 +12,17 @@ const VolumenDescuento = require('./VolumenDescuento');
 const UsoProducto = require('./UsoProducto');
 const EtiquetaProducto = require('./EtiquetaProducto');
 const OfertaProducto = require('./OfertaProducto');
+const ConfigPremiosRuleta = require('./Config_premios_ruleta');
+const ConfigPuntos = require('./Config_puntos');
+const ConfigRolRequisito = require('./ConfigRolRequisito');
+const ConfigRolBeneficio = require('./ConfigRolBeneficio');
+const ConfigRuleta = require('./Config_ruleta');
+const ConfigSorteos = require('./Config_sorteos');
+const CodigoReferido = require('./CodigoReferido');
+const Cupon = require('./Cupon');
+const UserCupon = require('./UserCupon');
+const TipoEnvio = require('./TipoEnvio');
+const MetodoPago = require('./MetodoPago');
 
 // =====================================================
 // DEFINIR TODAS LAS ASOCIACIONES
@@ -126,6 +137,74 @@ CarritoProducto.belongsTo(Producto, {
 });
 
 // =====================================================
+// RELACIONES DE CONFIGURACIÓN
+// =====================================================
+
+// 13. ConfigRolRequisito - Producto (1:N)
+ConfigRolRequisito.belongsTo(Producto, {
+  foreignKey: 'producto_id',
+  as: 'producto'
+});
+Producto.hasMany(ConfigRolRequisito, {
+  foreignKey: 'producto_id',
+  as: 'requisitosRol'
+});
+
+// 14. ConfigPremiosRuleta - Producto (1:N) - Solo para premios tipo 'producto'
+ConfigPremiosRuleta.belongsTo(Producto, {
+  foreignKey: 'producto_id',
+  as: 'producto'
+});
+Producto.hasMany(ConfigPremiosRuleta, {
+  foreignKey: 'producto_id',
+  as: 'premiosRuleta'
+});
+
+// 15. CodigoReferido - User (1:N)
+CodigoReferido.belongsTo(User, {
+  foreignKey: 'usuario_id',
+  as: 'usuario'
+});
+User.hasMany(CodigoReferido, {
+  foreignKey: 'usuario_id',
+  as: 'codigosReferido'
+});
+
+// 16. ConjuntoCarritoProducto - TipoEnvio (N:1)
+ConjuntoCarritoProducto.belongsTo(TipoEnvio, {
+  foreignKey: 'tipoEnvioId',
+  as: 'tipoEnvio'
+});
+TipoEnvio.hasMany(ConjuntoCarritoProducto, {
+  foreignKey: 'tipoEnvioId',
+  as: 'conjuntos'
+});
+
+// 17. ConjuntoCarritoProducto - MetodoPago (N:1)
+ConjuntoCarritoProducto.belongsTo(MetodoPago, {
+  foreignKey: 'metodoPagoId',
+  as: 'metodoPago'
+});
+MetodoPago.hasMany(ConjuntoCarritoProducto, {
+  foreignKey: 'metodoPagoId',
+  as: 'conjuntos'
+});
+
+// 18. User - Cupon (N:M) a través de UserCupon
+User.belongsToMany(Cupon, {
+  through: UserCupon,
+  foreignKey: 'userId',
+  otherKey: 'cuponId',
+  as: 'cupones'
+});
+Cupon.belongsToMany(User, {
+  through: UserCupon,
+  foreignKey: 'cuponId',
+  otherKey: 'userId',
+  as: 'usuarios'
+});
+
+// =====================================================
 // EXPORTAR TODOS LOS MODELOS
 // =====================================================
 
@@ -142,5 +221,16 @@ module.exports = {
   VolumenDescuento,
   UsoProducto,
   EtiquetaProducto,
-  OfertaProducto
+  OfertaProducto,
+  ConfigPremiosRuleta,
+  ConfigPuntos,
+  ConfigRolRequisito,
+  ConfigRolBeneficio,
+  ConfigRuleta,
+  ConfigSorteos,
+  CodigoReferido,
+  Cupon,
+  UserCupon,
+  TipoEnvio,
+  MetodoPago
 };

@@ -3,20 +3,37 @@ const jwt = require('jsonwebtoken');
 const catchError = require('../utils/catchError');
 const User = require('../models/User');
 const createController = require('./createController');
+const CodigoGenerator = require('../utils/codigoGenerator');
 
 // Crear controlador base para User
 const baseController = createController('User');
 
 // ✅ Registro personalizado (con confirmación y hash de contraseña)
 const create = catchError(async (req, res) => {
-  const { contraseña, confirmPassword, ...rest } = req.body;
+  const { contraseña, confirmPassword, codigoQueLoReferio, ...rest } = req.body;
 
   if (confirmPassword && contraseña !== confirmPassword) {
     return res.status(400).json({ error: 'Las contraseñas no coinciden.' });
   }
 
+  // Validar código de referido si se proporcionó
+  if (codigoQueLoReferio) {
+    const referrer = await CodigoGenerator.validateReferralCode(codigoQueLoReferio);
+    if (!referrer) {
+      return res.status(400).json({ error: 'Código de referido no válido' });
+    }
+  }
+
+  // Generar código único para que este usuario pueda referir
+  const codigoReferido = await CodigoGenerator.generateUniqueCode();
+
   const hashedPassword = await bcrypt.hash(contraseña, 10);
-  const user = await User.create({ ...rest, contraseña: hashedPassword });
+  const user = await User.create({ 
+    ...rest, 
+    contraseña: hashedPassword,
+    codigoReferido, // Generado automáticamente
+    codigoQueLoReferio: codigoQueLoReferio || null // El que lo refirió
+  });
 
   return res.status(201).json(user);
 });

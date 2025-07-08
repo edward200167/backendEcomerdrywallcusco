@@ -9,6 +9,12 @@ const createRoutes = () => {
   Object.keys(controllers).forEach(controllerName => {
     const controller = controllers[controllerName];
     
+    // Verificar que el controlador existe y tiene los métodos necesarios
+    if (!controller || typeof controller !== 'object' || !controller.getAll) {
+      console.warn(`Controller ${controllerName} is missing or invalid`);
+      return;
+    }
+    
     // Crear ruta basada en el nombre del controlador
     let routePath = `/${controllerName}`;
     
@@ -26,7 +32,17 @@ const createRoutes = () => {
       'ofertaproducto': '/ofertas',
       'user': '/users',
       'conjuntocarritoproducto': '/carrito',
-      'carritoproducto': '/carrito-items'
+      'carritoproducto': '/carrito-items',
+      'config_premios_ruleta': '/config/premios-ruleta',
+      'config_puntos': '/config/puntos',
+      'configrolrequisito': '/config/roles-requisitos',
+      'configrolbeneficio': '/config/roles-beneficios',
+      'config_ruleta': '/config/ruleta',
+      'config_sorteos': '/config/sorteos',
+      'codigoreferido': '/codigos-referido',
+      'cupon': '/cupones',
+      'tipoenvio': '/tipos-envio',
+      'metodopago': '/metodos-pago'
     };
     
     routePath = routeMap[controllerName] || routePath;

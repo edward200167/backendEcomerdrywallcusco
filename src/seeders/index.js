@@ -17,6 +17,19 @@ const conjuntoCarritoProductoSeeder = require('./conjuntoCarritoProductoSeeder')
 const carritoProductoSeeder = require('./carritoProductoSeeder');
 const relacionesSeeder = require('./relacionesSeeder');
 const resetSequences = require('./resetSequences');
+const configPremiosRuletaSeeder = require('./configPremiosRuletaSeeder');
+const configPuntosSeeder = require('./configPuntosSeeder');
+const configRolRequisitoSeeder = require('./configRolRequisitoSeeder');
+const configRolBeneficioSeeder = require('./configRolBeneficioSeeder');
+const configRuletaSeeder = require('./configRuletaSeeder');
+const tipoEnvioSeeder = require('./tipoEnvioSeeder');
+const metodoPagoSeeder = require('./metodoPagoSeeder');
+const configSorteosSeeder = require('./configSorteosSeeder');
+const codigoReferidoSeeder = require('./codigoReferidoSeeder');
+const cuponSeeder = require('./cuponSeeder');
+const cuponReferidoSeeder = require('./cuponReferidoSeeder');
+const userCuponSeeder = require('./userCuponSeeder');
+const aplicarRecompensasReferidoSeeder = require('./aplicarRecompensasReferidoSeeder');
 
 const runSeeders = async () => {
   try {
@@ -35,11 +48,32 @@ const runSeeders = async () => {
     await usoProductoSeeder();
     await volumenDescuentoSeeder();
     
+    // Configuraciones del sistema (sin dependencias de productos)
+    await configPuntosSeeder();
+    await configRuletaSeeder();
+    await configSorteosSeeder();
+    await tipoEnvioSeeder();
+    await metodoPagoSeeder();
+    
+    // Cupones (sin dependencias)
+    await cuponSeeder();
+    
     // Luego los usuarios
     await userSeeder();
     
     // Productos (después de todas las dependencias)
     await productoSeeder();
+    
+    // Configuraciones que dependen de productos (después de crear productos)
+    await configRolRequisitoSeeder();
+    await configRolBeneficioSeeder();
+    await configPremiosRuletaSeeder();
+    
+    // Códigos de referido (después de usuarios)
+    await codigoReferidoSeeder();
+    
+    // User-Cupón (después de usuarios y cupones)
+    await userCuponSeeder();
     
     // Ofertas de productos (después de productos)
     await ofertaProductoSeeder();
@@ -55,6 +89,9 @@ const runSeeders = async () => {
     
     // Crear relaciones many-to-many con SQL directo
     await relacionesSeeder();
+    
+    // Aplicar recompensas de referidos después de que todo esté creado
+    await aplicarRecompensasReferidoSeeder();
     
     // Resetear secuencias de auto-incremento
     await resetSequences();

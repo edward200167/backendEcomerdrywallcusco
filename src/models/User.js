@@ -31,14 +31,20 @@ const User = sequelize.define('user', {
         allowNull: false
     },
     rol: {
-        type: DataTypes.ENUM('admin', 'cliente', 'empresa'),
+        type: DataTypes.ENUM('admin', 'cliente', 'empresarial'),
         allowNull: false,
         defaultValue: 'cliente'
     },
     codigoReferido: {
         type: DataTypes.STRING,
         allowNull: true,
-        unique: true
+        unique: true,
+        comment: 'Código único para que este usuario pueda referir a otros'
+    },
+    codigoQueLoReferio: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        comment: 'Código del usuario que lo refirió'
     },
     aceptoTerminos: {
         type: DataTypes.BOOLEAN,
