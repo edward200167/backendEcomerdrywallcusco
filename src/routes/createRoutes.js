@@ -40,7 +40,7 @@ const createRoutes = () => {
       'config_ruleta': '/config/ruleta',
       'config_sorteos': '/config/sorteos',
       'codigoreferido': '/codigos-referido',
-      'cupon': '/cupones',
+      'cupon': '/esta',
       'tipoenvio': '/tipos-envio',
       'metodopago': '/metodos-pago'
     };
